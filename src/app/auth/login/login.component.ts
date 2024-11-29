@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal, WritableSignal} from "@angular/core";
+import {Component, inject, signal, WritableSignal} from "@angular/core";
 import {IonButton, IonInput, IonItem, IonList, IonText} from "@ionic/angular/standalone";
 import {NgOptimizedImage} from "@angular/common";
 import {AuthSession} from "@supabase/supabase-js";
@@ -41,27 +41,19 @@ import {isPlatform} from "@ionic/angular";
     </div>
   `
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   private readonly supabaseService = inject(SupabaseService);
 
   session: WritableSignal<AuthSession|null> = signal(null);
 
   email = signal<string>('');
 
-  async ngOnInit() {
-    const { data } = await this.getSession();
-    console.log('dt',data);
-    this.session.set(data.session);
-  };
+  login = async ():Promise<void> => {
 
-  login = () => {
     const redirectTo = isPlatform('capacitor') ? 'travel://login':`${window.location.origin}/login`;
-    this.supabaseService.supabase.auth.signInWithOtp({email:this.email(),options:{
-      emailRedirectTo: redirectTo
-      }}).then((result) => {console.log('result',result);});
-  };
 
-  getSession = async () => {
-    return await this.supabaseService.supabase.auth.getSession();
-  }
+    await this.supabaseService.supabase.auth.signInWithOtp({email:this.email(),options:{
+      emailRedirectTo: redirectTo
+    }});
+  };
 }

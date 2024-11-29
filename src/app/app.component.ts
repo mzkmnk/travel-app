@@ -20,16 +20,14 @@ export class AppComponent {
   private router = inject(Router);
 
   constructor() {
-    // this.supabaseService.supabase.auth.onAuthStateChange((event, session):void => {
-    //   console.log('event',event);
-    //   console.log('session',session);
-    // });
-
-    this.setupListener().then();
+    this.setupListener()
   }
 
-   setupListener =async (): Promise<void> => {
-    await App.addListener('appUrlOpen',async (data:URLOpenListenerEvent) => {
+  /** capacitorでのredirectでセッション情報があるなら保存してinternalに移動する */
+  setupListener = (): void => {
+
+    App.addListener('appUrlOpen',async (data:URLOpenListenerEvent) => {
+
       const url:string = data.url;
       const accessToken:string|undefined = url.split('#access_token=').pop()?.split('&')[0];
       const refreshToken:string|undefined = url.split('#refresh_token=').pop()?.split('&')[0];
@@ -38,9 +36,9 @@ export class AppComponent {
         return
       }
 
-      await this.supabaseService.supabase.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+      await this.supabaseService.supabase.auth.setSession({access_token:accessToken,refresh_token:refreshToken})
 
-      await this.router.navigate(['/']);
-    })
+      await this.router.navigate(['/internal']);
+    }).then()
   }
 }
