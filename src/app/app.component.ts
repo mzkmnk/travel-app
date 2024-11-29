@@ -1,8 +1,8 @@
 import {Component, inject} from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import {SupabaseService} from "../shared/services/supabase.service";
 import {App, URLOpenListenerEvent} from "@capacitor/app";
 import {Router} from "@angular/router";
+import {SupabaseService} from "@/src/shared/services/supabase.service";
 
 @Component({
     selector: 'app-root',

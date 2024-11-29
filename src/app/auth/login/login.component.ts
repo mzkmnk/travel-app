@@ -3,7 +3,7 @@ import {IonButton, IonInput, IonItem, IonList, IonText} from "@ionic/angular/sta
 import {NgOptimizedImage} from "@angular/common";
 import {AuthSession} from "@supabase/supabase-js";
 import {FormsModule} from "@angular/forms";
-import {SupabaseService} from "../../../shared/services/supabase.service";
+import {SupabaseService} from "@/src/shared/services/supabase.service";
 import {isPlatform} from "@ionic/angular";
 
 @Component({

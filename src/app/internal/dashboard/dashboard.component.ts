@@ -1,5 +1,5 @@
 import {Component, inject, OnInit, signal } from "@angular/core";
-import {SupabaseService} from "../../../shared/services/supabase.service";
+import {SupabaseService} from "@/src/shared/services/supabase.service";
 import {AuthSession} from "@supabase/supabase-js";
 
 @Component({
