@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import {SupabaseService} from "../shared/services/supabase.service";
+import {App, URLOpenListenerEvent} from "@capacitor/app";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-root',
@@ -11,5 +14,33 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
     `
 })
 export class AppComponent {
-  constructor() {}
+
+  private readonly supabaseService = inject(SupabaseService);
+
+  private router = inject(Router);
+
+  constructor() {
+    // this.supabaseService.supabase.auth.onAuthStateChange((event, session):void => {
+    //   console.log('event',event);
+    //   console.log('session',session);
+    // });
+
+    this.setupListener().then();
+  }
+
+   setupListener =async (): Promise<void> => {
+    await App.addListener('appUrlOpen',async (data:URLOpenListenerEvent) => {
+      const url:string = data.url;
+      const accessToken:string|undefined = url.split('#access_token=').pop()?.split('&')[0];
+      const refreshToken:string|undefined = url.split('#refresh_token=').pop()?.split('&')[0];
+
+      if(accessToken === undefined || refreshToken === undefined){
+        return
+      }
+
+      await this.supabaseService.supabase.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+
+      await this.router.navigate(['/']);
+    })
+  }
 }
