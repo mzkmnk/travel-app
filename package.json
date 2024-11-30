@@ -29,6 +29,8 @@
     "@capacitor/keyboard": "6.0.3",
     "@capacitor/status-bar": "6.0.2",
     "@ionic/angular": "^8.0.0",
+    "@ngrx/operators": "^18.1.1",
+    "@ngrx/signals": "^19.0.0-beta.0",
     "@supabase/supabase-js": "^2.46.1",
     "ionicons": "^7.2.1",
     "rxjs": "~7.8.0",
