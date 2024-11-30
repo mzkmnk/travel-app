@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import {AuthGuard} from "@/src/shared/guards/auth.guard";
 
 export const routes: Routes = [
   {
@@ -8,6 +9,7 @@ export const routes: Routes = [
   {
     path:'internal',
     loadChildren:() => import('./internal/internal.routes').then((M) => M.INTERNAL_ROUTES),
+    canActivate:[AuthGuard],
   },
   {
     path: '**',

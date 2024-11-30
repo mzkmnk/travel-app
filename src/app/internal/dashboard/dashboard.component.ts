@@ -34,6 +34,8 @@ export class DashboardComponent implements OnInit {
 
     if(error) throw error;
 
+    console.log(data.session);
+
     this.session.set(data.session);
   }
 }
