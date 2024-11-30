@@ -2,8 +2,6 @@ import {Component, inject, OnInit, signal } from "@angular/core";
 import {SupabaseService} from "@/src/shared/services/supabase.service";
 import {AuthSession} from "@supabase/supabase-js";
 import {IonButton, IonContent} from "@ionic/angular/standalone";
-import {UserAPI} from "@/src/shared/api/user.api";
-import {map} from "rxjs";
 
 @Component({
   selector: "app-dashboard",
@@ -20,6 +18,8 @@ import {map} from "rxjs";
       </div>
 
       <ion-button (click)="test()">test</ion-button>
+
+      <ion-button (click)="signOut()">sign out</ion-button>
     </ion-content>
   `,
   styles:`
@@ -32,8 +32,6 @@ export class DashboardComponent implements OnInit {
 
   private readonly supabaseService = inject(SupabaseService);
 
-  private readonly userAPI = inject(UserAPI);
-
   session = signal<AuthSession|null>(null);
 
   async ngOnInit():Promise<void> {
@@ -44,9 +42,18 @@ export class DashboardComponent implements OnInit {
     this.session.set(data.session);
   }
 
-  test = () => {
-    this.userAPI.existUserById({id:'24ab9938-fea9-43ec-93f7-2321542222d1'}).pipe(
-      map(data => {console.log(data)})
-    ).subscribe()
+  test = async () => {
+    await this.supabaseService.supabase.auth.setSession({access_token:'',refresh_token:''})
+    // this.userAPI.create({
+    //   "id":"b2f1d8e9-19cc-4b31-bfc5-6b2520b764d6",
+    //   "username":"test",
+    //   "email":"mzkmnk"
+    // }).pipe(
+    //   map(data => {})
+    // ).subscribe()
+  };
+
+  signOut = async () => {
+    await this.supabaseService.supabase.auth.signOut();
   };
 }

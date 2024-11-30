@@ -11,7 +11,7 @@ export class ToastService {
    * @param toastOptions
    */
   presentToast = async ({toastOptions}:{toastOptions:ToastOptions}) => {
-    const toast = await this.toastCtrl.create(toastOptions);
+    const toast = await this.toastCtrl.create({duration:5000,...toastOptions});
 
     await toast.present();
 

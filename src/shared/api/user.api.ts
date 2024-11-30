@@ -31,7 +31,7 @@ export class UserAPI {
   }
   /**
    * ユーザが存在するか確認する
-   * @param id
+   * @param id uuid
    */
   existUserById = ({id}:{id:string}):Observable<{exist:boolean}> => {
     return this.http.get<{exist:boolean}>(`${environment.endpoints.api}/user/${id}`);

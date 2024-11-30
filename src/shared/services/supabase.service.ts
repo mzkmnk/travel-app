@@ -1,46 +1,69 @@
-import {Injectable} from "@angular/core";
-import {createClient, SupabaseClient, User} from "@supabase/supabase-js";
+import {inject, Injectable} from "@angular/core";
+import {createClient, SupabaseClient} from "@supabase/supabase-js";
 import {environment} from "../../environments/environment";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Router} from "@angular/router";
+import {AuthSignalStore} from "@/src/shared/stores/auth.signal-store";
+import {firstValueFrom} from "rxjs";
+import {UserAPI} from "@/src/shared/api/user.api";
+import {ToastService} from "@/src/shared/services/toast.service";
 
 @Injectable({providedIn:'root'})
 export class SupabaseService {
 
   supabase:SupabaseClient;
 
-  private currentUser:BehaviorSubject<User|boolean> = new BehaviorSubject<User|boolean>(false);
+  private readonly router = inject(Router);
+
+  private readonly authSignalStore = inject(AuthSignalStore);
+
+  private readonly userAPI = inject(UserAPI);
+
+  private readonly toastService = inject(ToastService);
 
   constructor() {
     this.supabase =  createClient(environment.supabaseUrl,environment.supabaseKey);
 
-    this.supabase.auth.onAuthStateChange((event, session) => {
-      if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session){
-        this.currentUser.next(session?.user);
-      }else{
-        this.currentUser.next(false);
+    this.supabase.auth.onAuthStateChange( async (event, session) => {
+
+      console.log('supabase service',event);
+
+      // ログアウト時
+      if(event === 'SIGNED_OUT'){
+        await this.router.navigate(['/auth'],{replaceUrl:true});
+        return
+      }
+
+      const user = session?.user;
+
+      // ユーザが存在しない時
+      // if(user === undefined){
+      //   await this.toastService.presentToast({toastOptions:{message:'Can not Authentication',color:'warning'}})
+      //   return
+      // }
+
+      // ユーザが存在する時
+      if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && user !== undefined && user.email !== undefined){
+
+        const {exist} = await firstValueFrom(this.userAPI.existUserById({id:user.id}));
+
+        console.log('exist',exist);
+
+        // DBにユーザが存在しないならユーザを作成する
+        if(!exist){
+          await firstValueFrom(this.userAPI.create({id: user.id, username: user.email.split('@')[0], email: user.email}));
+        }
+
+        await this.toastService.presentToast({toastOptions:{message:'Success Authentication',duration:3000,color:'success'}})
+
+        this.authSignalStore.setUser({
+          user:{
+            ...user,
+            username:'', // todo get user name
+          }
+        })
+
+        await this.router.navigate(['/internal'],{replaceUrl:true});
       }
     });
-
-    this.loadUser().then();
   }
-
-  /** ユーザを取得する */
-  loadUser = async ():Promise<void> => {
-    if(this.currentUser.value){
-      return
-    }
-
-    const user = await this.supabase.auth.getUser();
-
-    if(user.data.user){
-      this.currentUser.next(user.data.user);
-    }else{
-      this.currentUser.next(false);
-    }
-  };
-
-  /** 現在のユーザの状態を取得する */
-  getCurrentUser = ():Observable<User|boolean> => {
-    return this.currentUser.asObservable();
-  };
 }

@@ -31,6 +31,10 @@ import {ToastService} from "@/src/shared/services/toast.service";
 
         <div class="bg-blue-600 w-4/5 px-2 py-3 rounded-md" (click)="login()">
           <div class="flex items-center justify-center gap-2">
+            <!-- todo -->
+            <!-- <span> -->
+            <!--     <img ngSrc="assets/icon/SvgSpinnersRingResize.svg" width="20" height="20" alt="loading"> -->
+            <!-- </span> -->
             <p class="text-white font-semibold">Login</p>
           </div>
         </div>
@@ -38,7 +42,9 @@ import {ToastService} from "@/src/shared/services/toast.service";
         <div class="bg-gray-100 w-4/5 px-2 py-3 rounded-md">
           <div class="flex items-center justify-center gap-2">
             <img ngSrc="assets/icon/GoogleIcon.svg" width="20" height="20" alt="google icon">
-            <p class="font-semibold text-gray-400">Sign in with Google</p>
+            <p class="font-semibold text-gray-400">
+              Sign in with Google
+            </p>
           </div>
         </div>
       </div>

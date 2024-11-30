@@ -1,4 +1,4 @@
-import {signalStore, withMethods, withState} from "@ngrx/signals";
+import {patchState, signalStore, withMethods, withState} from "@ngrx/signals";
 
 export type TUserState = {
   id:string;
@@ -8,10 +8,16 @@ export type TUserState = {
 export const UserSignalStore = signalStore(
   {providedIn:'root'},
   withState<TUserState>({id:'id',username:''}),
-  withMethods(() => {
+  withMethods((signalStore) => {
 
+  const setUser = ({user}:{user:TUserState}):void => {
+    patchState(signalStore,{
+      ...user
+    })
+  };
 
-
-    return {}
+    return {
+      setUser,
+    }
   }),
 )
