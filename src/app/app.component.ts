@@ -4,6 +4,7 @@ import {App, URLOpenListenerEvent} from "@capacitor/app";
 import {Router} from "@angular/router";
 import {SupabaseService} from "@/src/shared/services/supabase.service";
 import {ToastService} from "@/src/shared/services/toast.service";
+import {UserAPI} from "@/src/shared/api/user.api";
 
 @Component({
     selector: 'app-root',
@@ -24,18 +25,20 @@ export class AppComponent {
 
   constructor() {
 
-    this.supabaseService.supabase.auth.onAuthStateChange((_, session):void => {
-      if(session?.user){
-        this.router.navigate(['/internal'],{replaceUrl:true}).then();
+    this.supabaseService.supabase.auth.onAuthStateChange((event, session): void => {
+      console.log(event);
+      if (session?.user) {
+        console.log(session?.user);
+        this.router.navigate(['/internal'], {replaceUrl: true}).then();
       }
     });
 
-    this.setupListener()
+    this.setupListener().then()
   }
 
   /** capacitorでのredirectでセッション情報があるなら保存してinternalに移動する */
-  setupListener = (): void => {
-    App.addListener('appUrlOpen',async (data:URLOpenListenerEvent) => {
+  setupListener = async (): Promise<void> => {
+    await App.addListener('appUrlOpen',async (data:URLOpenListenerEvent) => {
 
       const toast = await this.toastService.presentToast({toastOptions:{message:'Loading...',color:'medium'}});
 
@@ -52,8 +55,10 @@ export class AppComponent {
 
       await this.supabaseService.supabase.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
 
+      // this.userAPI.create({id: '', username: '', email: ''})
+
       await this.toastService.presentToast({toastOptions:{message:'Success Authentication',duration:3000,color:'success'}})
 
-    }).then()
+    })
   }
 }

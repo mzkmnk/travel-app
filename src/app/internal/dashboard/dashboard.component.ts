@@ -1,12 +1,15 @@
 import {Component, inject, OnInit, signal } from "@angular/core";
 import {SupabaseService} from "@/src/shared/services/supabase.service";
 import {AuthSession} from "@supabase/supabase-js";
-import {IonContent} from "@ionic/angular/standalone";
+import {IonButton, IonContent} from "@ionic/angular/standalone";
+import {UserAPI} from "@/src/shared/api/user.api";
+import {map} from "rxjs";
 
 @Component({
   selector: "app-dashboard",
   imports: [
-    IonContent
+    IonContent,
+    IonButton
   ],
   template: `
     <ion-content>
@@ -15,6 +18,8 @@ import {IonContent} from "@ionic/angular/standalone";
         <p>email:) {{ session()?.user?.email }}</p>
         <p>id:) {{ session()?.user?.id }}</p>
       </div>
+
+      <ion-button (click)="test()">test</ion-button>
     </ion-content>
   `,
   styles:`
@@ -27,6 +32,8 @@ export class DashboardComponent implements OnInit {
 
   private readonly supabaseService = inject(SupabaseService);
 
+  private readonly userAPI = inject(UserAPI);
+
   session = signal<AuthSession|null>(null);
 
   async ngOnInit():Promise<void> {
@@ -34,8 +41,12 @@ export class DashboardComponent implements OnInit {
 
     if(error) throw error;
 
-    console.log(data.session);
-
     this.session.set(data.session);
   }
+
+  test = () => {
+    this.userAPI.existUserById({id:'24ab9938-fea9-43ec-93f7-2321542222d1'}).pipe(
+      map(data => {console.log(data)})
+    ).subscribe()
+  };
 }
