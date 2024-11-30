@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import plugin from "tailwindcss/plugin";
+
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
@@ -6,6 +8,11 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({addUtilities}){
+      addUtilities({
+      })
+    }),
+  ]
 }
 

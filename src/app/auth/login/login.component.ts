@@ -1,42 +1,46 @@
 import {Component, inject, signal, WritableSignal} from "@angular/core";
-import {IonButton, IonInput, IonItem, IonList, IonText} from "@ionic/angular/standalone";
+import { IonInput } from "@ionic/angular/standalone";
 import {NgOptimizedImage} from "@angular/common";
-import {AuthSession} from "@supabase/supabase-js";
 import {FormsModule} from "@angular/forms";
 import {SupabaseService} from "@/src/shared/services/supabase.service";
 import {isPlatform} from "@ionic/angular";
+import {ToastService} from "@/src/shared/services/toast.service";
 
 @Component({
   selector: "app-login",
   imports: [
-    IonButton,
     NgOptimizedImage,
     IonInput,
     FormsModule,
-    IonList,
-    IonItem,
-    IonText
   ],
   template: `
-    <div class="flex items-center justify-center h-screen container flex-col">
-      <ion-button (click)="login()">
-        <div class="flex items-center justify-center gap-2">
-          <img ngSrc="assets/icon/GoogleIcon.svg" width="20" height="20" alt="google icon">
-          <p>Login with Google</p>
-        </div>
-      </ion-button>
-
-      <ion-list>
-        <ion-item>
-          <ion-input labelPlacement="floating" [(ngModel)]="email">
-            <div slot="label">Email <ion-text color="danger">(Required)</ion-text></div>
-          </ion-input>
-        </ion-item>
-      </ion-list>
-
+    <div class="flex items-center justify-center gap-20 flex-col h-screen container">
       <div>
-        <p>session</p>
-        <p>{{ session()?.user?.email }}</p>
+        <img ngSrc="assets/icon/ServiceIcon.svg" width="90" height="90" alt="service icon">
+      </div>
+      <div class="flex items-center justify-center flex-col gap-4 w-full">
+        <ion-input
+          [(ngModel)]="email"
+          class="w-4/5"
+          mode="md" label="Email"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Enter text"
+        >
+        </ion-input>
+
+        <div class="bg-blue-600 w-4/5 px-2 py-3 rounded-md" (click)="login()">
+          <div class="flex items-center justify-center gap-2">
+            <p class="text-white font-semibold">Login</p>
+          </div>
+        </div>
+
+        <div class="bg-gray-100 w-4/5 px-2 py-3 rounded-md">
+          <div class="flex items-center justify-center gap-2">
+            <img ngSrc="assets/icon/GoogleIcon.svg" width="20" height="20" alt="google icon">
+            <p class="font-semibold text-gray-400">Sign in with Google</p>
+          </div>
+        </div>
       </div>
     </div>
   `
@@ -44,16 +48,20 @@ import {isPlatform} from "@ionic/angular";
 export class LoginComponent {
   private readonly supabaseService = inject(SupabaseService);
 
-  session: WritableSignal<AuthSession|null> = signal(null);
+  private readonly toastService = inject(ToastService);
 
-  email = signal<string>('');
+  email:WritableSignal<string> = signal<string>('');
 
   login = async ():Promise<void> => {
 
-    const redirectTo = isPlatform('capacitor') ? 'travel://login':`${window.location.origin}/login`;
+    const redirectTo:string = isPlatform('capacitor') ? 'travel://login':`${window.location.origin}/login`;
 
     await this.supabaseService.supabase.auth.signInWithOtp({email:this.email(),options:{
       emailRedirectTo: redirectTo
     }});
+
+    await this.toastService.presentToast({toastOptions:{message:"Check your email for the login link!",position:"top",color:"success"}});
+
+    this.email.set('');
   };
 }
