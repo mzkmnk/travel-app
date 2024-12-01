@@ -1,19 +1,27 @@
-import {Component, inject, signal } from "@angular/core";
-import {SupabaseService} from "@/src/shared/services/supabase.service";
-import {AuthSession} from "@supabase/supabase-js";
-import {IonButton, IonContent} from "@ionic/angular/standalone";
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject} from "@angular/core";
+import {IonBackButton, IonButton, IonButtons, IonContent} from "@ionic/angular/standalone";
 import {NgOptimizedImage} from "@angular/common";
+import {Camera} from "@capacitor/camera";
+import {UploadSignalStore} from "@/src/shared/stores/upload.signal-store";
+import {RouterSignalStore} from "@/src/shared/stores/router.signal-store";
 
 @Component({
   selector: "app-dashboard",
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     IonContent,
-    NgOptimizedImage
+    NgOptimizedImage,
+    IonButton,
   ],
   template: `
     <ion-content class="ion-content-bg-primary">
+      <div class="flex items-center justify-between">
+        <ion-button fill="clear" (click)="uploadPhotos()">
+          <img ngSrc="assets/icon/AddOutline.svg" height="35" width="35" alt="image add icon">
+        </ion-button>
+      </div>
       <div class="flex items-center flex-col gap-3">
-        @for(i of Array(10).fill(0); track i){
+        @for(i of Array(10).fill(0);let j = $index; track j){
           <div class="flex flex-col gap-6 bg-white rounded-[30px] w-11/12 h-[35rem] p-4">
             <div class="flex items-center justify-between">
               <div class="flex gap-2 items-center">
@@ -29,9 +37,14 @@ import {NgOptimizedImage} from "@angular/common";
               </div>
               <img ngSrc="assets/icon/DotsHorizontalOutline.svg" height="30" width="30" alt="dots">
             </div>
-            <div class="relative w-full h-3/4 flex items-center justify-center">
-              <img class="rounded-3xl" ngSrc="assets/mock/mock1.jpg" alt="mock" fill priority>
-            </div>
+            <swiper-container class="relative w-full h-3/4" speed="500">
+              <swiper-slide>
+                <img class="rounded-xl" ngSrc="assets/mock/mock1.jpg" alt="mock" fill priority>
+              </swiper-slide>
+              <swiper-slide>
+                <img class="rounded-xl" ngSrc="assets/mock/mock2.jpg" alt="mock" fill priority>
+              </swiper-slide>
+            </swiper-container>
           </div>
         }
       </div>
@@ -43,18 +56,30 @@ import {NgOptimizedImage} from "@angular/common";
     }
     ion-content::part(scroll) {
       padding-top: var(--ion-safe-area-top, 0);
+      padding-bottom: var(--ion-safe-area-bottom, 0);
     }
   `
 })
 export class DashboardComponent {
 
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly uploadSignalStore = inject(UploadSignalStore);
 
-  session = signal<AuthSession|null>(null);
+  private readonly routerSignalStore = inject(RouterSignalStore);
 
+  uploadPhotos = async ():Promise<void> => {
 
-  signOut = async () => {
-    await this.supabaseService.supabase.auth.signOut();
+    // await Camera.requestPermissions({permissions:['camera','photos']});
+
+    const {photos} = await Camera.pickImages({
+      quality:100,
+      presentationStyle:'popover',
+      limit:15,
+    });
+
+    this.uploadSignalStore.setGalleryPhotos({photos});
+
+    await this.routerSignalStore.navigate({path:'internal/upload'})
   };
+
   protected readonly Array = Array;
 }

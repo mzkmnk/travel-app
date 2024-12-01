@@ -3,6 +3,9 @@ import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
 import {App, URLOpenListenerEvent} from "@capacitor/app";
 import {SupabaseService} from "@/src/shared/services/supabase.service";
 import {ToastService} from "@/src/shared/services/toast.service";
+import { register } from 'swiper/element/bundle';
+
+register();
 
 @Component({
     selector: 'app-root',
