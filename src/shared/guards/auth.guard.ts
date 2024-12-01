@@ -13,6 +13,7 @@ export const AuthGuard:CanActivateFn = () => {
   const authSignalStore = inject(AuthSignalStore);
 
   return toObservable(authSignalStore.user).pipe(
+    // filter(isAuth => isAuth !== undefined),
     map((isAuth):true|UrlTree => {
       if(isAuth === undefined){
         return router.createUrlTree(['/auth'])

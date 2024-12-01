@@ -35,11 +35,6 @@ export class SupabaseService {
 
       const user = session?.user;
 
-      // ユーザが存在しない時
-      // if(user === undefined){
-      //   await this.toastService.presentToast({toastOptions:{message:'Can not Authentication',color:'warning'}})
-      //   return
-      // }
 
       // ユーザが存在する時
       if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && user !== undefined && user.email !== undefined){
