@@ -35,3 +35,57 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+//@font-face {
+//  font-family: 'IlneFont';
+//  src: url('assets/fonts/line/LINESeedJP_A_OTF_Bd.otf') format('truetype'),
+//  url('assets/fonts/line/LINESeedJP_A_OTF_Eb.otf') format('truetype'),
+//  url('assets/fonts/line/LINESeedJP_A_OTF_Rg.otf') format('truetype'),
+//  url('assets/fonts/line/LINESeedJP_A_OTF_Th.otf') format('truetype');
+//  font-weight: normal;
+//  font-style: normal;
+//  font-display: swap; /* フォントの読み込みを最適化 */
+//}
+
+
+/* Regular */
+@font-face {
+  font-family: 'IlneFont';
+  src: url('assets/fonts/line/LINESeedJP_A_OTF_Rg.otf') format('opentype');
+  font-weight: 400; /* 通常 */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Thin */
+@font-face {
+  font-family: 'IlneFont';
+  src: url('assets/fonts/line/LINESeedJP_A_OTF_Th.otf') format('opentype');
+  font-weight: 100; /* 細字 */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bold */
+@font-face {
+  font-family: 'IlneFont';
+  src: url('assets/fonts/line/LINESeedJP_A_OTF_Bd.otf') format('opentype');
+  font-weight: 700; /* 太字 */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Extra Bold */
+@font-face {
+  font-family: 'IlneFont';
+  src: url('assets/fonts/line/LINESeedJP_A_OTF_Eb.otf') format('opentype');
+  font-weight: 800; /* 極太字 */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+* {
+  font-family: 'IlneFont', sans-serif;
+}
