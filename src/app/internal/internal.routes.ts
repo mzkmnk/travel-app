@@ -10,6 +10,10 @@ export const INTERNAL_ROUTES: Routes = [
     loadComponent: () => import('./add/add.component').then((m) => m.AddComponent),
   },
   {
+    path: 'user',
+    loadComponent: () => import('./user/user.component').then((m) => m.UserComponent),
+  },
+  {
     path: '**',
     redirectTo: 'home',
   }

@@ -11,9 +11,9 @@ import {NgOptimizedImage} from "@angular/common";
   template: `
     <ion-content>
       <div class="flex flex-col items-center gap-3">
-        <div class="flex items-center flex-col w-[345px] min-h-[465px] rounded-3xl bg-white py-1">
+        <div class="flex items-center flex-col w-[345px] min-h-[465px] rounded-3xl bg-white pb-1">
           <div class="flex-1 relative min-w-full">
-            <img ngSrc="assets/icon/BusinessTrip.svg" fill alt="Trip Trip"/>
+            <img class="rounded-3xl" ngSrc="assets/icon/BusinessTrip.svg" fill alt="Trip Trip"/>
           </div>
           <div class="w-full h-full flex flex-col px-5 py-1 gap-2">
             <div class="bg-[#28A745] w-[51px] flex items-center justify-center rounded-md">
@@ -25,9 +25,9 @@ import {NgOptimizedImage} from "@angular/common";
           </div>
         </div>
 
-        <div class="flex items-center flex-col w-[345px] min-h-[465px] rounded-3xl bg-white py-1">
+        <div class="flex items-center flex-col w-[345px] min-h-[465px] rounded-3xl bg-white pb-1">
           <div class="flex-1 relative min-w-full">
-            <img ngSrc="assets/icon/BusinessTrip.svg" fill alt="Trip Trip"/>
+            <img class="rounded-3xl" ngSrc="assets/sumples/sumple1.jpg" fill alt="Trip Trip"/>
           </div>
           <div class="w-full h-full flex flex-col px-5 py-1 gap-2">
             <div class="bg-[#28A745] w-[51px] flex items-center justify-center rounded-md">
@@ -39,9 +39,9 @@ import {NgOptimizedImage} from "@angular/common";
           </div>
         </div>
 
-        <div class="flex items-center flex-col w-[345px] min-h-[465px] rounded-3xl bg-white py-1">
+        <div class="flex items-center flex-col w-[345px] min-h-[465px] rounded-3xl bg-white pb-1">
           <div class="flex-1 relative min-w-full">
-            <img ngSrc="assets/icon/BusinessTrip.svg" fill alt="Trip Trip"/>
+            <img class="rounded-3xl" ngSrc="assets/icon/BusinessTrip.svg" fill alt="Trip Trip"/>
           </div>
           <div class="w-full h-full flex flex-col px-5 py-1 gap-2">
             <div class="bg-[#28A745] w-[51px] flex items-center justify-center rounded-md">
@@ -57,7 +57,7 @@ import {NgOptimizedImage} from "@angular/common";
   `,
   styles: `
     ion-content::part(scroll) {
-      padding: var(--ion-safe-area-top, 0) var(--ion-safe-area-right, 0) 70px var(--ion-safe-area-left, 0); // todo bottom size
+      padding: var(--ion-safe-area-top, 0) var(--ion-safe-area-right, 0) 90px var(--ion-safe-area-left, 0); // todo bottom size
     }
 
     ion-content {
